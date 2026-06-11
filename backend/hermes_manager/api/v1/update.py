@@ -8,7 +8,7 @@ from fastapi import APIRouter
 
 router = APIRouter(prefix="/update", tags=["Update"])
 
-CURRENT_VERSION = "2.3.0"
+CURRENT_VERSION = "2.3.1"
 
 
 @router.get("/check")
@@ -40,6 +40,41 @@ def check_update():
         }
     except Exception:
         return {"current": CURRENT_VERSION, "latest": None, "has_update": False, "error": "无法连接 GitHub"}
+
+
+@router.post("/upgrade")
+async def run_upgrade():
+    """执行 pip install 升级"""
+    import subprocess, sys
+    try:
+        # 先获取最新下载链接
+        req = urllib.request.Request(
+            "https://api.github.com/repos/yjw1063199483/hermes-manager/releases/latest",
+            headers={"User-Agent": "hermes-manager", "Accept": "application/vnd.github.v3+json"},
+        )
+        with urllib.request.urlopen(req, timeout=8) as resp:
+            latest = _json.loads(resp.read())
+            download = ""
+            for asset in latest.get("assets", []):
+                if asset["name"].endswith(".whl"):
+                    download = asset["browser_download_url"]
+                    break
+        if not download:
+            return {"ok": False, "error": "未找到下载链接"}
+
+        result = subprocess.run(
+            [sys.executable, "-m", "pip", "install", "--upgrade", download],
+            capture_output=True, text=True, encoding="utf-8", errors="replace",
+            timeout=120,
+        )
+        if result.returncode == 0:
+            return {"ok": True, "message": "升级完成，请重启 hermes-manager 生效"}
+        else:
+            return {"ok": False, "error": result.stderr or result.stdout}
+    except subprocess.TimeoutExpired:
+        return {"ok": False, "error": "升级超时"}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
 
 
 def _compare_versions(a: str, b: str) -> int:
