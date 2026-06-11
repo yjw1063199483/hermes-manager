@@ -9,7 +9,7 @@ from fastapi.responses import JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 
 from hermes_manager.core.exceptions import HermesManagerError
-from hermes_manager.api.v1 import skills, mcp, market, toolsets, soul, export_data, memory, sessions, files, terminal_exec
+from hermes_manager.api.v1 import skills, mcp, market, toolsets, soul, export_data, import_data, memory, sessions, files, terminal_exec
 
 
 def create_app() -> FastAPI:
@@ -46,6 +46,7 @@ def create_app() -> FastAPI:
     app.include_router(toolsets.router, prefix="/api/v1")
     app.include_router(soul.router, prefix="/api/v1")
     app.include_router(export_data.router, prefix="/api/v1")
+    app.include_router(import_data.router, prefix="/api/v1")
     app.include_router(memory.router, prefix="/api/v1")
     app.include_router(sessions.router, prefix="/api/v1")
     app.include_router(files.router, prefix="/api/v1")

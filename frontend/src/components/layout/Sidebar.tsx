@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { useAppStore } from '../../stores/appStore'
 import type { AppStats } from '../../types/market'
 
@@ -14,6 +15,31 @@ export function Sidebar() {
   const setActiveTab = useAppStore((s) => s.setActiveTab)
   const stats = useAppStore((s) => s.stats)
   const openDrawer = useAppStore((s) => s.openDrawer)
+  const addToast = useAppStore((s) => s.addToast)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    const formData = new FormData()
+    formData.append('file', file)
+
+    try {
+      const resp = await fetch('/api/v1/import', { method: 'POST', body: formData })
+      const data = await resp.json()
+      if (data.ok) {
+        addToast(data.message || '导入成功', 'success')
+      } else {
+        addToast(data.detail || '导入失败', 'error')
+      }
+    } catch (err: unknown) {
+      addToast((err as Error).message, 'error')
+    }
+
+    // Reset input so same file can be re-selected
+    if (fileInputRef.current) fileInputRef.current.value = ''
+  }
 
   return (
     <nav className="sidebar">
@@ -65,6 +91,14 @@ export function Sidebar() {
           <span>📦</span>
           <span>导出配置</span>
         </a>
+        <button className="nav-item"
+          onClick={() => fileInputRef.current?.click()}
+          style={{ width: '100%', border: 'none', background: 'none', cursor: 'pointer' }}>
+          <span>📥</span>
+          <span>导入配置</span>
+        </button>
+        <input ref={fileInputRef} type="file" accept=".zip"
+          style={{ display: 'none' }} onChange={handleImport} />
         <div className="stats-mini">
           <div className="stat-line">
             <span className="stat-label">Model</span>
