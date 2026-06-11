@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "skills": {
+    "azure-validate": {
+      "source": "microsoft/azure-skills",
+      "sourceType": "github",
+      "skillPath": "skills/azure-validate/SKILL.md",
+      "computedHash": "32dbf12501454e92d7e07d665f4e9df576465f27b5e9e9ca68b8fa63f1ea5e63"
+    },
+    "frontend-design": {
+      "source": "anthropics/skills",
+      "sourceType": "github",
+      "skillPath": "skills/frontend-design/SKILL.md",
+      "computedHash": "93f53fd1c0352d3d7ec17b8f73d7351bf76f4821e55d123c9d2abc2c53ba48e4"
+    }
+  }
+}

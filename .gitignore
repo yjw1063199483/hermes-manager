@@ -1,0 +1,19 @@
+# pip build
+dist/
+*.egg-info/
+build/
+
+# Python
+__pycache__/
+*.pyc
+
+# Frontend
+frontend/node_modules/
+frontend/dist/
+
+# IDE
+.idea/
+.vscode/
+
+# Bundled static (copied from frontend/dist during packaging)
+backend/hermes_manager/static/

@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hermes-manager"
+version = "2.0.0"
+description = "Hermes Agent Web 管理后台 — Skills / MCP / Memory / History 一站式管理"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi>=0.110",
+    "uvicorn[standard]>=0.29",
+    "pydantic-settings>=2.0",
+    "pyyaml>=6.0",
+    "python-multipart>=0.0.9",
+]
+
+[project.scripts]
+hermes-manager = "hermes_manager.__main__:main"
+
+[tool.setuptools.packages.find]
+where = ["backend"]
+
+[tool.setuptools.package-dir]
+"hermes_manager" = "backend/hermes_manager"
+
+[tool.setuptools.package-data]
+hermes_manager = ["static/**/*"]
