@@ -1,14 +1,38 @@
 """更新检查 API"""
 from __future__ import annotations
 
+import os
 import urllib.request
 import json as _json
+from pathlib import Path
 
 from fastapi import APIRouter
 
 router = APIRouter(prefix="/update", tags=["Update"])
 
-CURRENT_VERSION = "2.3.4"
+CURRENT_VERSION = "2.3.5"
+
+
+def _github_token() -> str | None:
+    """读取 GitHub Token 用于认证 API 请求"""
+    home = os.environ.get("LOCALAPPDATA") or os.path.expanduser("~")
+    env_file = Path(home) / "hermes" / ".env"
+    if env_file.exists():
+        for raw in env_file.read_text(encoding="utf-8").splitlines():
+            if "=" not in raw or raw.startswith("#"):
+                continue
+            k, v = raw.split("=", 1)
+            if k.strip() == "GITHUB_TOKEN":
+                return v.strip()
+    return None
+
+
+def _github_headers() -> dict:
+    headers = {"User-Agent": "hermes-manager", "Accept": "application/vnd.github.v3+json"}
+    token = _github_token()
+    if token:
+        headers["Authorization"] = f"Bearer {token}"
+    return headers
 
 
 @router.get("/check")
@@ -17,7 +41,7 @@ def check_update():
     try:
         req = urllib.request.Request(
             "https://api.github.com/repos/yjw1063199483/hermes-manager/releases/latest",
-            headers={"User-Agent": "hermes-manager", "Accept": "application/vnd.github.v3+json"},
+            headers=_github_headers(),
         )
         with urllib.request.urlopen(req, timeout=8) as resp:
             latest = _json.loads(resp.read())
@@ -36,10 +60,9 @@ def check_update():
             "has_update": has_update,
             "url": latest_url,
             "download": download,
-            "command": f"pip install {download}" if download else f"pip install --upgrade hermes-manager",
         }
-    except Exception:
-        return {"current": CURRENT_VERSION, "latest": None, "has_update": False, "error": "无法连接 GitHub"}
+    except Exception as e:
+        return {"current": CURRENT_VERSION, "latest": None, "has_update": False, "error": str(e)[:100]}
 
 
 @router.post("/upgrade")
@@ -47,10 +70,9 @@ async def run_upgrade():
     """执行 pip install 升级"""
     import subprocess, sys
     try:
-        # 先获取最新下载链接
         req = urllib.request.Request(
             "https://api.github.com/repos/yjw1063199483/hermes-manager/releases/latest",
-            headers={"User-Agent": "hermes-manager", "Accept": "application/vnd.github.v3+json"},
+            headers=_github_headers(),
         )
         with urllib.request.urlopen(req, timeout=8) as resp:
             latest = _json.loads(resp.read())

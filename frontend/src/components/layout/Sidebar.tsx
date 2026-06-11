@@ -139,7 +139,7 @@ export function Sidebar() {
                 }
               } catch { addToast('检查失败', 'error') }
             }}>
-            🔄 v2.3.4
+            🔄 v2.3.5
           </button>
         </div>
       </div>
