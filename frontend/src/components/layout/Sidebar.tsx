@@ -116,6 +116,21 @@ export function Sidebar() {
             <span className="stat-label">{t('sidebar.model')}</span>
             <span className="stat-value">{stats?.model ?? '-'}</span>
           </div>
+          <div className="stat-line" style={{ cursor: 'pointer' }} onClick={async () => {
+            try {
+              const r = await fetch('/api/v1/update/check')
+              const d = await r.json()
+              if (d.has_update) {
+                await navigator.clipboard.writeText(d.command)
+                addToast(`🔔 v${d.latest} 可用！升级命令已复制`, 'info')
+              } else {
+                addToast('✅ 已是最新版本 v' + d.current, 'success')
+              }
+            } catch { addToast('检查失败，无法连接', 'error') }
+          }}>
+            <span className="stat-label">Ver</span>
+            <span className="stat-value">v2.3.0</span>
+          </div>
         </div>
       </div>
     </nav>

@@ -14,10 +14,23 @@ import { SessionsPanel } from './components/sessions/SessionsPanel'
 export default function App() {
   const activeTab = useAppStore((s) => s.activeTab)
   const setStats = useAppStore((s) => s.setStats)
+  const addToast = useAppStore((s) => s.addToast)
 
   useEffect(() => {
     api.getStats().then((d) => setStats(d)).catch(() => {})
   }, [setStats])
+
+  // 启动时检查更新
+  useEffect(() => {
+    fetch('/api/v1/update/check')
+      .then(r => r.json())
+      .then(d => {
+        if (d.has_update) {
+          addToast(`🔔 有新版本 v${d.latest}！升级命令已复制`, 'info')
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   return (
     <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
