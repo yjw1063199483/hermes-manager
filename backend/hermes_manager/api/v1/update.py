@@ -78,8 +78,9 @@ def check_update():
 
 @router.post("/upgrade")
 async def run_upgrade():
-    """执行 pip install 升级"""
-    import subprocess, sys
+    """后台执行 pip install 升级（延迟3秒，避免替换运行中的文件）"""
+    import subprocess, sys, tempfile, shutil
+
     try:
         req = urllib.request.Request(
             "https://api.github.com/repos/yjw1063199483/hermes-manager/releases/latest",
@@ -88,6 +89,7 @@ async def run_upgrade():
         with urllib.request.urlopen(req, timeout=8) as resp:
             latest = _json.loads(resp.read())
             download = ""
+            latest_ver = latest.get("tag_name", "").lstrip("v")
             for asset in latest.get("assets", []):
                 if asset["name"].endswith(".whl"):
                     download = asset["browser_download_url"]
@@ -95,19 +97,26 @@ async def run_upgrade():
         if not download:
             return {"ok": False, "error": "未找到下载链接"}
 
-        result = subprocess.run(
-            [sys.executable, "-m", "pip", "install", "--upgrade", download],
-            capture_output=True, text=True, encoding="utf-8", errors="replace",
-            timeout=120,
+        # 先下载 wheel 到临时文件
+        tmpdir = tempfile.gettempdir()
+        whl_path = os.path.join(tmpdir, "hermes_manager_update.whl")
+        with urllib.request.urlopen(download, timeout=60) as r:
+            with open(whl_path, "wb") as f:
+                shutil.copyfileobj(r, f)
+
+        # 后台延迟升级（3秒后执行，此时 HTTP 响应已返回）
+        python = sys.executable
+        subprocess.Popen(
+            f'start /B cmd /c "timeout /t 3 >nul && {python} -m pip install --upgrade {whl_path} && del {whl_path}"',
+            shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
         )
-        if result.returncode == 0:
-            return {"ok": True, "message": "升级完成，请重启 hermes-manager 生效"}
-        else:
-            return {"ok": False, "error": result.stderr or result.stdout}
-    except subprocess.TimeoutExpired:
-        return {"ok": False, "error": "升级超时"}
+
+        return {
+            "ok": True,
+            "message": f"v{latest_ver} 将在后台升级，3秒后执行。升级完成后请重启 hermes-manager",
+        }
     except Exception as e:
-        return {"ok": False, "error": str(e)}
+        return {"ok": False, "error": str(e)[:100]}
 
 
 def _compare_versions(a: str, b: str) -> int:
