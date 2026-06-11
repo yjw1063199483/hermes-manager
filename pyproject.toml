@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "hermes-manager"
-version = "2.2.4"
+version = "2.2.5"
 description = "Hermes Agent Web 管理后台 — Skills / MCP / Memory / History 一站式管理"
 readme = "README.md"
 license = "MIT"
