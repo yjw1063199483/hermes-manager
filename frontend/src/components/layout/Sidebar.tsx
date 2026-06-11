@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useRef, useEffect, useState } from 'react'
 import { useAppStore } from '../../stores/appStore'
 import { useT } from '../../i18n'
 import type { AppStats } from '../../types/market'
@@ -19,6 +19,14 @@ export function Sidebar() {
   const addToast = useAppStore((s) => s.addToast)
   const fileInputRef = useRef<HTMLInputElement>(null)
   const { t, lang, setLang } = useT()
+  const [appVer, setAppVer] = useState('...')
+
+  useEffect(() => {
+    fetch('/api/v1/update/version')
+      .then(r => r.json())
+      .then(d => setAppVer(d.version))
+      .catch(() => setAppVer('?'))
+  }, [])
 
   const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -139,7 +147,7 @@ export function Sidebar() {
                 }
               } catch { addToast('检查失败', 'error') }
             }}>
-            🔄 v2.3.5
+            🔄 v{appVer}
           </button>
         </div>
       </div>

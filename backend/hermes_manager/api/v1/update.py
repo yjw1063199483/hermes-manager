@@ -4,13 +4,24 @@ from __future__ import annotations
 import os
 import urllib.request
 import json as _json
+from importlib.metadata import version as _pkg_version
 from pathlib import Path
 
 from fastapi import APIRouter
 
 router = APIRouter(prefix="/update", tags=["Update"])
 
-CURRENT_VERSION = "2.3.5"
+# 从已安装包读取真实版本号，无需手动改
+try:
+    CURRENT_VERSION = _pkg_version("hermes-manager")
+except Exception:
+    CURRENT_VERSION = "0.0.0"
+
+
+@router.get("/version")
+def get_version():
+    """返回当前版本号"""
+    return {"version": CURRENT_VERSION}
 
 
 def _github_token() -> str | None:
