@@ -18,6 +18,23 @@ class SkillRepository:
     def __init__(self, base_dir: Path | None = None):
         self._base = base_dir or get_settings().skills_dir
 
+    def _sanitize_fm(self, fm: dict) -> dict:
+        """将 frontmatter 中可能为数组的字段安全转为字符串"""
+        safe = dict(fm)
+        # author 可能是字符串或数组 → 统一为字符串
+        author = safe.get("author", "")
+        if isinstance(author, list):
+            safe["author"] = ", ".join(str(a) for a in author)
+        elif not isinstance(author, str):
+            safe["author"] = str(author) if author else ""
+        # description 同样防御
+        desc = safe.get("description", "")
+        if isinstance(desc, list):
+            safe["description"] = " ".join(str(d) for d in desc)
+        elif not isinstance(desc, str):
+            safe["description"] = str(desc) if desc else ""
+        return safe
+
     def list_all(self) -> list[SkillSummary]:
         skills: list[SkillSummary] = []
         if not self._base.exists():
@@ -30,7 +47,14 @@ class SkillRepository:
             dir_name = parts[-2] if len(parts) >= 2 else ""
 
             stat = md_path.stat()
-            fm = self._parse_frontmatter(md_path.read_text(encoding="utf-8"))[0]
+            fm = self._sanitize_fm(self._parse_frontmatter(md_path.read_text(encoding="utf-8"))[0])
+
+            # tags 可能在 metadata.hermes.tags 或顶层 tags
+            tags = fm.get("metadata", {}).get("hermes", {}).get("tags")
+            if tags is None:
+                tags = fm.get("tags", [])
+            if not isinstance(tags, list):
+                tags = []
 
             skills.append(SkillSummary(
                 name=fm.get("name", dir_name),
@@ -39,7 +63,7 @@ class SkillRepository:
                 description=fm.get("description", ""),
                 version=fm.get("version", "1.0.0"),
                 author=fm.get("author", ""),
-                tags=fm.get("metadata", {}).get("hermes", {}).get("tags", []),
+                tags=tags,
                 path=str(md_path),
                 size=stat.st_size,
                 modified=datetime.fromtimestamp(stat.st_mtime).isoformat(),
