@@ -8,7 +8,7 @@ from fastapi import APIRouter
 
 router = APIRouter(prefix="/update", tags=["Update"])
 
-CURRENT_VERSION = "2.3.1"
+CURRENT_VERSION = "2.3.2"
 
 
 @router.get("/check")

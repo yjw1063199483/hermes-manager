@@ -116,29 +116,27 @@ export function Sidebar() {
             <span className="stat-label">{t('sidebar.model')}</span>
             <span className="stat-value">{stats?.model ?? '-'}</span>
           </div>
-          <div className="stat-line" style={{ cursor: 'pointer' }} onClick={async () => {
-            try {
-              const r = await fetch('/api/v1/update/check')
-              const d = await r.json()
-              if (d.has_update) {
-                if (confirm(`发现新版本 v${d.latest}，是否立即升级？`)) {
-                  addToast('⏳ 正在升级，请稍候...', 'info')
-                  const ur = await fetch('/api/v1/update/upgrade', { method: 'POST' })
-                  const ud = await ur.json()
-                  if (ud.ok) {
-                    addToast('✅ ' + ud.message, 'success')
-                  } else {
-                    addToast('❌ ' + (ud.error || '升级失败'), 'error')
+          <button className="stat-line"
+            style={{ width: '100%', border: 'none', background: 'none', cursor: 'pointer', color: 'inherit' }}
+            onClick={async () => {
+              try {
+                const r = await fetch('/api/v1/update/check')
+                const d = await r.json()
+                if (d.has_update) {
+                  if (confirm(`发现新版本 v${d.latest}，是否立即升级？`)) {
+                    addToast('⏳ 正在升级...', 'info')
+                    const ur = await fetch('/api/v1/update/upgrade', { method: 'POST' })
+                    const ud = await ur.json()
+                    addToast(ud.ok ? '✅ ' + ud.message : '❌ ' + (ud.error || '失败'), ud.ok ? 'success' : 'error')
                   }
+                } else {
+                  addToast('✅ 已是最新 v' + d.current, 'success')
                 }
-              } else {
-                addToast('✅ 已是最新版本 v' + d.current, 'success')
-              }
-            } catch { addToast('检查失败，无法连接', 'error') }
-          }}>
-            <span className="stat-label">Ver</span>
-            <span className="stat-value">v2.3.1</span>
-          </div>
+              } catch { addToast('检查失败', 'error') }
+            }}>
+            <span className="stat-label">🔄 更新</span>
+            <span className="stat-value">v2.3.2</span>
+          </button>
         </div>
       </div>
     </nav>
