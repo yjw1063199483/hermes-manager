@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { api } from '../../api/client'
 import { useAppStore } from '../../stores/appStore'
+import { useT } from '../../i18n'
 
 function CopyIcon() {
   return (
@@ -29,13 +30,14 @@ export function SessionsPanel() {
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const openDrawer = useAppStore((s) => s.openDrawer)
   const addToast = useAppStore((s) => s.addToast)
+  const { t } = useT()
 
   const copySessionId = (id: string, e: React.MouseEvent) => {
     e.stopPropagation()
     navigator.clipboard.writeText(id).then(() => {
-      addToast('会话ID已复制，可用 hermes -r ' + id.slice(0, 12) + '... 打开', 'success')
+      addToast(t('history.copyHint', { id: id.slice(0, 12) }), 'success')
     }).catch(() => {
-      addToast('复制失败', 'error')
+      addToast(t('common.copyFail'), 'error')
     })
   }
 
@@ -68,7 +70,7 @@ export function SessionsPanel() {
 
   const batchDelete = async () => {
     if (selected.size === 0) return
-    if (!confirm(`确定删除 ${selected.size} 个会话？不可撤销。`)) return
+    if (!confirm(t('history.confirmDelete', { n: selected.size }))) return
     try {
       await api.batchDeleteSessions([...selected])
       cancelSelect()
@@ -83,19 +85,19 @@ export function SessionsPanel() {
     <section className="panel active">
       <header className="panel-header">
         <div>
-          <h1>History</h1>
-          <p className="subtitle">共 {total} 个会话，{totalTokens.toLocaleString()} tokens</p>
+          <h1>{t('panel.history')}</h1>
+          <p className="subtitle">{t('common.total', { n: total })} {t('history.total')}，{totalTokens.toLocaleString()} {t('history.tokens')}</p>
         </div>
         <div className="header-actions" style={{ gap: 8 }}>
           {selectMode ? (
             <>
-              <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>已选 {selected.size}</span>
+              <span style={{ fontSize: 13, color: 'var(--text-muted)' }}>{t('history.selected')} {selected.size}</span>
               <button className="btn btn-secondary btn-sm" onClick={toggleAll}>
-                {selected.size === sessions.length ? '取消全选' : '全选'}
+                {selected.size === sessions.length ? t('history.deselectAll') : t('history.selectAll')}
               </button>
               <button className="btn btn-danger btn-sm" disabled={selected.size === 0}
-                onClick={batchDelete}>确认删除</button>
-              <button className="btn btn-secondary btn-sm" onClick={cancelSelect}>取消</button>
+                onClick={batchDelete}>{t('history.batchDelete')}</button>
+              <button className="btn btn-secondary btn-sm" onClick={cancelSelect}>{t('common.cancel')}</button>
             </>
           ) : (
             <>
@@ -103,10 +105,10 @@ export function SessionsPanel() {
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                   <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
                 </svg>
-                <input placeholder="搜索..." value={search}
+                <input placeholder={t('common.search')} value={search}
                   onChange={(e) => { setSearch(e.target.value); setPage(1) }} />
               </div>
-              <button className="btn btn-danger btn-sm" onClick={enterSelect}>删除</button>
+              <button className="btn btn-danger btn-sm" onClick={enterSelect}>{t('common.delete')}</button>
             </>
           )}
         </div>
@@ -114,9 +116,9 @@ export function SessionsPanel() {
 
       <div className="mcp-list">
         {loading ? (
-          <p style={{ color: 'var(--text-muted)', padding: 20 }}>加载中...</p>
+          <p style={{ color: 'var(--text-muted)', padding: 20 }}>{t('common.loading')}</p>
         ) : sessions.length === 0 ? (
-          <div className="empty-state"><p>暂无会话</p></div>
+          <div className="empty-state"><p>{t('common.empty')}</p></div>
         ) : (
           sessions.map((s) => {
             const isSel = selected.has(s.id)
@@ -148,7 +150,7 @@ export function SessionsPanel() {
                       }}>{s.id}</code>
                       <button
                         onClick={(e) => copySessionId(s.id, e)}
-                        title="复制"
+                        title={t('common.copy')}
                         style={{
                           display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
                           width: 24, height: 24, border: 'none', borderRadius: 4,
@@ -179,10 +181,10 @@ export function SessionsPanel() {
       {totalPages > 1 && !selectMode && (
         <div className="pagination">
           <button className="btn btn-secondary btn-sm" disabled={page <= 1}
-            onClick={() => setPage(page - 1)}>上一页</button>
-          <span className="pagination-info">{page} / {totalPages}（共 {total} 条）</span>
+            onClick={() => setPage(page - 1)}>{t('history.prevPage')}</button>
+          <span className="pagination-info">{page} / {totalPages}（{t('common.total', { n: total })}）</span>
           <button className="btn btn-secondary btn-sm" disabled={page >= totalPages}
-            onClick={() => setPage(page + 1)}>下一页</button>
+            onClick={() => setPage(page + 1)}>{t('history.nextPage')}</button>
         </div>
       )}
     </section>

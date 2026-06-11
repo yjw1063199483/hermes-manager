@@ -1,13 +1,14 @@
 import { useRef } from 'react'
 import { useAppStore } from '../../stores/appStore'
+import { useT } from '../../i18n'
 import type { AppStats } from '../../types/market'
 
 const tabs = [
-  { id: 'skills' as const, label: 'Skills', icon: '📚', badge: (s: AppStats) => s?.skills_count },
-  { id: 'mcp' as const, label: 'MCP', icon: '🔌', badge: (s: AppStats) => s?.mcp_count },
-  { id: 'memory' as const, label: 'Memory', icon: '🧩' },
-  { id: 'sessions' as const, label: 'History', icon: '💬' },
-  { id: 'toolsets' as const, label: 'Toolsets', icon: '⚙️' },
+  { id: 'skills' as const, tkey: 'sidebar.skills', icon: '📚', badge: (s: AppStats) => s?.skills_count },
+  { id: 'mcp' as const, tkey: 'sidebar.mcp', icon: '🔌', badge: (s: AppStats) => s?.mcp_count },
+  { id: 'memory' as const, tkey: 'sidebar.memory', icon: '🧩' },
+  { id: 'sessions' as const, tkey: 'sidebar.history', icon: '💬' },
+  { id: 'toolsets' as const, tkey: 'sidebar.toolsets', icon: '⚙️' },
 ]
 
 export function Sidebar() {
@@ -17,6 +18,7 @@ export function Sidebar() {
   const openDrawer = useAppStore((s) => s.openDrawer)
   const addToast = useAppStore((s) => s.addToast)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const { t, lang, setLang } = useT()
 
   const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -29,15 +31,14 @@ export function Sidebar() {
       const resp = await fetch('/api/v1/import', { method: 'POST', body: formData })
       const data = await resp.json()
       if (data.ok) {
-        addToast(data.message || '导入成功', 'success')
+        addToast(data.message || t('import.success'), 'success')
       } else {
-        addToast(data.detail || '导入失败', 'error')
+        addToast(data.detail || t('import.fail'), 'error')
       }
     } catch (err: unknown) {
       addToast((err as Error).message, 'error')
     }
 
-    // Reset input so same file can be re-selected
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
@@ -60,16 +61,16 @@ export function Sidebar() {
       </div>
 
       <div className="nav-items">
-        {tabs.map((t) => (
+        {tabs.map((tab) => (
           <button
-            key={t.id}
-            className={`nav-item ${activeTab === t.id ? 'active' : ''}`}
-            onClick={() => t.id === 'memory' ? setActiveTab('memory') : setActiveTab(t.id)}
+            key={tab.id}
+            className={`nav-item ${activeTab === tab.id ? 'active' : ''}`}
+            onClick={() => setActiveTab(tab.id)}
           >
-            <span>{t.icon}</span>
-            <span>{t.label}</span>
-            {t.badge && stats && (
-              <span className="badge">{t.badge(stats)}</span>
+            <span>{tab.icon}</span>
+            <span>{t(tab.tkey)}</span>
+            {tab.badge && stats && (
+              <span className="badge">{tab.badge(stats)}</span>
             )}
           </button>
         ))}
@@ -79,29 +80,38 @@ export function Sidebar() {
         <button className="nav-item" onClick={() => openDrawer('soul', 'view')}
           style={{ width: '100%', marginBottom: 4 }}>
           <span>🧠</span>
-          <span>人设</span>
+          <span>{t('sidebar.soul')}</span>
         </button>
         <button className="nav-item" onClick={() => setActiveTab('market')}
           style={{ width: '100%', marginBottom: 4 }}>
           <span>🛒</span>
-          <span>市场</span>
+          <span>{t('sidebar.market')}</span>
         </button>
         <a className="nav-item" href="/api/v1/export" download="hermes-export.zip"
           style={{ width: '100%', textDecoration: 'none' }}>
           <span>📦</span>
-          <span>导出配置</span>
+          <span>{t('sidebar.export')}</span>
         </a>
         <button className="nav-item"
           onClick={() => fileInputRef.current?.click()}
           style={{ width: '100%', border: 'none', background: 'none', cursor: 'pointer' }}>
           <span>📥</span>
-          <span>导入配置</span>
+          <span>{t('sidebar.import')}</span>
         </button>
         <input ref={fileInputRef} type="file" accept=".zip"
           style={{ display: 'none' }} onChange={handleImport} />
+
+        {/* Language Toggle */}
+        <button className="nav-item"
+          onClick={() => setLang(lang === 'zh' ? 'en' : 'zh')}
+          style={{ width: '100%', border: 'none', background: 'none', cursor: 'pointer', fontSize: 13 }}>
+          <span>🌐</span>
+          <span>{lang === 'zh' ? 'English' : '中文'}</span>
+        </button>
+
         <div className="stats-mini">
           <div className="stat-line">
-            <span className="stat-label">Model</span>
+            <span className="stat-label">{t('sidebar.model')}</span>
             <span className="stat-value">{stats?.model ?? '-'}</span>
           </div>
         </div>

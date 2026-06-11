@@ -1,11 +1,13 @@
 import { useEffect, useState, useCallback } from 'react'
 import { api } from '../../api/client'
 import { useAppStore } from '../../stores/appStore'
+import { useT } from '../../i18n'
 import type { MCPServer } from '../../types/mcp'
 
 const PAGE_SIZE = 10
 
 export function MCPPanel() {
+  const { t } = useT()
   const [servers, setServers] = useState<MCPServer[]>([])
   const [total, setTotal] = useState(0)
   const [page, setPage] = useState(1)
@@ -27,11 +29,11 @@ export function MCPPanel() {
     <section className="panel active">
       <header className="panel-header">
         <div>
-          <h1>MCP</h1>
+          <h1>{t('panel.mcp')}</h1>
           <p className="subtitle">配置 Model Context Protocol 服务器</p>
         </div>
         <button className="btn btn-primary" onClick={() => openDrawer('mcp', 'create')}>
-          + 添加服务器
+          {t('mcp.add')}
         </button>
       </header>
 

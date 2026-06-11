@@ -1,11 +1,13 @@
 import { useEffect, useState, useCallback } from 'react'
 import { api } from '../../api/client'
 import { useAppStore } from '../../stores/appStore'
+import { useT } from '../../i18n'
 
 export function ToolsetsPanel() {
   const [platformToolsets, setPT] = useState<Record<string, string[]>>({})
   const [disabledToolsets, setDT] = useState<string[]>([])
   const addToast = useAppStore((s) => s.addToast)
+  const { t } = useT()
 
   const load = useCallback(async () => {
     const data = await api.getToolsets()
@@ -38,10 +40,10 @@ export function ToolsetsPanel() {
     <section className="panel active">
       <header className="panel-header">
         <div>
-          <h1>Toolsets</h1>
+          <h1>{t('panel.toolsets')}</h1>
           <p className="subtitle">按平台启用或禁用工具组</p>
         </div>
-        <button className="btn btn-primary" onClick={save}>💾 保存更改</button>
+        <button className="btn btn-primary" onClick={save}>💾 {t('toolsets.save')}</button>
       </header>
 
       {Object.entries(platformToolsets).map(([platform, tools]) => (

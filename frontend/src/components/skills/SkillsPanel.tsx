@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { api } from '../../api/client'
 import { useAppStore } from '../../stores/appStore'
+import { useT } from '../../i18n'
 import type { SkillSummary } from '../../types/skill'
 
 const PAGE_SIZE = 10
@@ -8,6 +9,7 @@ const PAGE_SIZE = 10
 export function SkillsPanel() {
   const [skills, setSkills] = useState<SkillSummary[]>([])         // 列表模式当前页
   const [allSkills, setAllSkills] = useState<SkillSummary[] | null>(null)  // 卡片模式全量（null=未加载）
+  const { t } = useT()
   const [total, setTotal] = useState(0)
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('all')
@@ -54,24 +56,24 @@ export function SkillsPanel() {
     <section className="panel active">
       <header className="panel-header">
         <div>
-          <h1>Skills</h1>
+          <h1>{t('panel.skills')}</h1>
           <p className="subtitle">管理可复用的 Agent 技能</p>
         </div>
         <div className="header-actions">
           <div className="view-toggle">
             <button className={`btn btn-sm ${viewMode === 'list' ? 'btn-primary' : 'btn-secondary'}`}
-              onClick={() => setViewMode('list')}>列表</button>
+              onClick={() => setViewMode('list')}>{t('common.list')}</button>
             <button className={`btn btn-sm ${viewMode === 'card' ? 'btn-primary' : 'btn-secondary'}`}
-              onClick={() => { setViewMode('card'); if (!allSkills) loadAll() }}>卡片</button>
+              onClick={() => { setViewMode('card'); if (!allSkills) loadAll() }}>{t('common.card')}</button>
           </div>
           <div className="search-box">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
-            <input placeholder="搜索技能..." value={search} onChange={(e) => { setSearch(e.target.value); setPage(1) }} />
+            <input placeholder={t('skills.search')} value={search} onChange={(e) => { setSearch(e.target.value); setPage(1) }} />
           </div>
           <button className="btn btn-primary" onClick={() => openDrawer('skill', 'create')}>
-            + 新建技能
+            {t('skills.create')}
           </button>
         </div>
       </header>

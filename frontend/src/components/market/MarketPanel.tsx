@@ -1,17 +1,19 @@
 import { useState, useEffect } from 'react'
 import { api } from '../../api/client'
 import { useAppStore } from '../../stores/appStore'
+import { useT } from '../../i18n'
 import type { MarketPlugin } from '../../types/market'
 
 export function MarketPanel() {
   const sub = useAppStore((s) => s.marketSub)
   const setSub = useAppStore((s) => s.setMarketSub)
+  const { t } = useT()
 
   return (
     <section className="panel active">
       <header className="panel-header">
         <div>
-          <h1>市场</h1>
+          <h1>{t('panel.market')}</h1>
           <p className="subtitle">发现和安装技能、MCP 服务器、插件</p>
         </div>
       </header>
@@ -19,7 +21,7 @@ export function MarketPanel() {
         {(['skills', 'mcp', 'plugins'] as const).map((s) => (
           <button key={s} className={`market-tab ${sub === s ? 'active' : ''}`}
             onClick={() => setSub(s)}>
-            {s === 'skills' ? 'Skills Hub' : s === 'mcp' ? 'MCP Catalog' : 'Plugins'}
+            {s === 'skills' ? t('market.skillsHub') : s === 'mcp' ? t('market.mcpCatalog') : t('market.plugins')}
           </button>
         ))}
       </div>

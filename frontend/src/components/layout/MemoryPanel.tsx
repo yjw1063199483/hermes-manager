@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { api } from '../../api/client'
 import { useAppStore } from '../../stores/appStore'
+import { useT } from '../../i18n'
 
 type Entry = { index: number; content: string }
 
 export function MemoryPanel() {
+  const { t } = useT()
   const [memoryType, setMemoryType] = useState<'memory' | 'user'>('memory')
   const [entries, setEntries] = useState<Entry[]>([])
   const [loading, setLoading] = useState(true)
@@ -63,15 +65,15 @@ export function MemoryPanel() {
     <section className="panel active">
       <header className="panel-header">
         <div>
-          <h1>Memory</h1>
+          <h1>{t('panel.memory')}</h1>
           <p className="subtitle">管理 Agent 和 User 持久记忆</p>
         </div>
         <div className="header-actions">
           <div className="view-toggle">
             <button className={`btn btn-sm ${memoryType === 'memory' ? 'btn-primary' : 'btn-secondary'}`}
-              onClick={() => setMemoryType('memory')}>Agent</button>
+              onClick={() => setMemoryType('memory')}>{t('memory.agent')}</button>
             <button className={`btn btn-sm ${memoryType === 'user' ? 'btn-primary' : 'btn-secondary'}`}
-              onClick={() => setMemoryType('user')}>User</button>
+              onClick={() => setMemoryType('user')}>{t('memory.user')}</button>
           </div>
           <button className="btn btn-primary" onClick={() => setAdding(true)}>+ 新增</button>
         </div>
