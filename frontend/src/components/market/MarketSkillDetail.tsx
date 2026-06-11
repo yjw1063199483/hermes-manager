@@ -1,10 +1,12 @@
 import { useState, useEffect, useMemo } from 'react'
 import { marked } from 'marked'
 import { api } from '../../api/client'
+import { useT } from '../../i18n'
 import { useAppStore } from '../../stores/appStore'
 
 export function MarketSkillDetail() {
   const data = useAppStore((s) => s.drawerData) as { owner: string; repo: string; skillId: string; name: string } | null
+  const { t } = useT()
   const closeDrawer = useAppStore((s) => s.closeDrawer)
   const addToast = useAppStore((s) => s.addToast)
   const [detail, setDetail] = useState<{ description: string; body: string; url: string; is_official: boolean; installs: number; source: string; name: string } | null>(null)
@@ -63,13 +65,13 @@ export function MarketSkillDetail() {
       <div className="drawer-header">
         <h2>{detail?.name || data.name}</h2>
         <div className="drawer-header-actions">
-          <button className="btn btn-primary btn-sm" onClick={install}>安装</button>
+          <button className="btn btn-primary btn-sm" onClick={install}>{t('market.install')}</button>
           <button className="btn-icon" onClick={closeDrawer}>✕</button>
         </div>
       </div>
       <div className="drawer-body" style={{ paddingBottom: 60 }}>
         {loading ? (
-          <p style={{ color: 'var(--text-muted)', fontSize: 13 }}>加载中...</p>
+          <p style={{ color: 'var(--text-muted)', fontSize: 13 }}>{t('common.loading')}</p>
         ) : detail ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
             {/* 统计栏 */}
@@ -78,21 +80,21 @@ export function MarketSkillDetail() {
               padding: '14px 16px', borderRadius: 10,
               background: 'var(--bg-input)', border: '1px solid var(--border)',
             }}>
-              <Stat label="来源" value={detail.source} />
-              <Stat label="分类" value={detail.is_official ? '🏛 官方' : '🌐 社区'} />
-              {detail.installs > 0 && <Stat label="安装量" value={fmtInstalls(detail.installs)} />}
-              <Stat label="页 面" value={<a href={detail.url} target="_blank" rel="noopener" style={{ color: 'var(--accent)', textDecoration: 'none' }}>skills.sh →</a>} />
+              <Stat label={t('detail.source')} value={detail.source} />
+              <Stat label={t('detail.category')} value={detail.is_official ? t('market.official') : t('market.community')} />
+              {detail.installs > 0 && <Stat label={t('detail.installs')} value={fmtInstalls(detail.installs)} />}
+              <Stat label={t('detail.page')} value={<a href={detail.url} target="_blank" rel="noopener" style={{ color: 'var(--accent)', textDecoration: 'none' }}>skills.sh →</a>} />
               <button className="btn btn-sm btn-secondary"
                 onClick={doTranslate} disabled={translating}
                 style={{ marginLeft: 'auto', alignSelf: 'center' }}>
-                {translating ? '翻译中...' : translatedBody ? '✓ 已翻译' : '🌐 翻译中文'}
+                {translating ? t('market.translating') : translatedBody ? t('market.translated') : t('market.translate')}
               </button>
             </div>
 
             {/* 简介 */}
             {detail.description && (
               <div>
-                <SectionTitle>简介</SectionTitle>
+                <SectionTitle>{t('detail.content')}</SectionTitle>
                 <p style={{ fontSize: 13, lineHeight: 1.75, color: 'var(--text-secondary)', margin: 0 }}>
                   {translatedDesc || detail.description}
                 </p>
@@ -102,7 +104,7 @@ export function MarketSkillDetail() {
             {/* 正文 — marked 渲染 */}
             {bodyHtml && (
               <div>
-                <SectionTitle>详细说明</SectionTitle>
+                <SectionTitle>{t('detail.metadata')}</SectionTitle>
                 <div
                   className="skill-markdown-body"
                   style={{
@@ -113,7 +115,7 @@ export function MarketSkillDetail() {
             )}
           </div>
         ) : (
-          <div className="empty-state"><p>加载失败</p></div>
+          <div className="empty-state"><p>{t('common.error')}</p></div>
         )}
       </div>
     </>

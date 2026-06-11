@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import { api } from '../../api/client'
+import { useT } from '../../i18n'
 import { useAppStore } from '../../stores/appStore'
 
 export function SoulEditor() {
   const [content, setContent] = useState('')
+  const { t } = useT()
   const [original, setOriginal] = useState('')
   const [loading, setLoading] = useState(true)
   const [preview, setPreview] = useState(true)  // 默认预览
@@ -36,18 +38,18 @@ export function SoulEditor() {
   return (
     <>
       <div className="drawer-header">
-        <h2>人设 · SOUL.md</h2>
+        <h2>{t('soul.title')}</h2>
         <div className="drawer-header-actions">
           <button className="btn btn-secondary btn-sm"
             onClick={() => setPreview(!preview)}>
-            {preview ? '编辑' : '预览'}
+            {preview ? t('soul.edit') : t('soul.preview')}
           </button>
         </div>
         <button className="btn-icon" onClick={closeDrawer}>✕</button>
       </div>
       <div className="drawer-body">
         {loading ? (
-          <p style={{ color: 'var(--text-muted)' }}>加载中...</p>
+          <p style={{ color: 'var(--text-muted)' }}>{t('common.loading')}</p>
         ) : preview ? (
           <div className="markdown-body" dangerouslySetInnerHTML={{ __html: renderMarkdown(content) }} />
         ) : (
@@ -61,10 +63,10 @@ export function SoulEditor() {
       </div>
       <div className="drawer-footer">
         <span className="drawer-footer-hint">
-          {changed ? '⚠ 有未保存的更改' : 'SOUL.md 在每次对话开始时加载'}
+          {changed ? t('soul.unsaved') : t('soul.loadHint')}
         </span>
         <button className="btn btn-primary" onClick={handleSave} disabled={!changed || saving}>
-          {saving ? '保存中...' : '保存'}
+          {saving ? t('common.saving') : t('common.save')}
         </button>
       </div>
     </>

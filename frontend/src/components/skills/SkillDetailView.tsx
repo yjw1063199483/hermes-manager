@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
+import { useT } from '../../i18n'
 import { useAppStore } from '../../stores/appStore'
 import { api } from '../../api/client'
 import type { SkillSummary } from '../../types/skill'
 
 export function SkillDetailView() {
   const data = useAppStore((s) => s.drawerData) as SkillSummary
+  const { t } = useT()
   const openDrawer = useAppStore((s) => s.openDrawer)
   const closeDrawer = useAppStore((s) => s.closeDrawer)
   const addToast = useAppStore((s) => s.addToast)
@@ -23,7 +25,7 @@ export function SkillDetailView() {
   if (!data) return null
 
   const handleDelete = async () => {
-    if (!confirm(`确定永久删除 "${data.name}"？`)) return
+    if (!confirm(t('detail.confirmDelete', { name: data.name }))) return
     try {
       await api.deleteSkill(data.category, data.dir_name)
       addToast('Skill 已删除 — 请执行 /reload-skills 生效', 'success')
@@ -40,44 +42,44 @@ export function SkillDetailView() {
         <div className="drawer-header-actions">
           <a className="btn btn-secondary btn-sm" style={{ textDecoration: 'none' }}
             href={`/api/v1/skills/${data.category}/${data.dir_name}/export`}
-            download={`${data.name}.md`}>导出</a>
+            download={`${data.name}.md`}>{t('common.export')}</a>
           <button className="btn btn-secondary btn-sm"
-            onClick={() => openDrawer('skill', 'edit', data)}>编辑</button>
-          <button className="btn btn-danger btn-sm" onClick={handleDelete}>删除</button>
+            onClick={() => openDrawer('skill', 'edit', data)}>{t('common.edit')}</button>
+          <button className="btn btn-danger btn-sm" onClick={handleDelete}>{t('common.delete')}</button>
         </div>
         <button className="btn-icon" onClick={closeDrawer}>✕</button>
       </div>
       <div className="drawer-body">
         <div className="detail-section">
-          <h4>元数据</h4>
+          <h4>{t('detail.metadata')}</h4>
           <div className="detail-meta-grid">
-            <div className="detail-meta-item"><div className="label">分类</div><div className="value">{data.category}</div></div>
-            <div className="detail-meta-item"><div className="label">版本</div><div className="value">{data.version}</div></div>
-            <div className="detail-meta-item"><div className="label">作者</div><div className="value">{data.author}</div></div>
-            <div className="detail-meta-item"><div className="label">大小</div><div className="value">{formatSize(data.size)}</div></div>
+            <div className="detail-meta-item"><div className="label">{t('detail.category')}</div><div className="value">{data.category}</div></div>
+            <div className="detail-meta-item"><div className="label">{t('detail.version')}</div><div className="value">{data.version}</div></div>
+            <div className="detail-meta-item"><div className="label">{t('detail.author')}</div><div className="value">{data.author}</div></div>
+            <div className="detail-meta-item"><div className="label">{t('detail.size')}</div><div className="value">{formatSize(data.size)}</div></div>
           </div>
         </div>
         {data.tags?.length > 0 && (
           <div className="detail-section">
-            <h4>标签</h4>
+            <h4>{t('detail.tags')}</h4>
             <div className="skill-tags">
               {data.tags.map((t) => <span key={t} className="skill-tag">{t}</span>)}
             </div>
           </div>
         )}
         <div className="detail-section">
-          <h4>内容</h4>
+          <h4>{t('detail.content')}</h4>
           {loading ? (
-            <p style={{ color: 'var(--text-muted)', fontSize: 13 }}>加载中...</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: 13 }}>{t('common.loading')}</p>
           ) : body ? (
             <div className="markdown-body" dangerouslySetInnerHTML={{ __html: renderMarkdown(body) }} />
           ) : (
-            <p style={{ color: 'var(--text-muted)', fontSize: 13 }}>无内容</p>
+            <p style={{ color: 'var(--text-muted)', fontSize: 13 }}>{t('detail.noContent')}</p>
           )}
         </div>
       </div>
       <div className="drawer-footer">
-        <span className="drawer-footer-hint">按 <kbd>Esc</kbd> 或点击外部关闭</span>
+        <span className="drawer-footer-hint">{t('common.key')}</span>
       </div>
     </>
   )

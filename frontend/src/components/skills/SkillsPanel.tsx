@@ -57,7 +57,7 @@ export function SkillsPanel() {
       <header className="panel-header">
         <div>
           <h1>{t('panel.skills')}</h1>
-          <p className="subtitle">管理可复用的 Agent 技能</p>
+          <p className="subtitle">{t('panel.skills.subtitle')}</p>
         </div>
         <div className="header-actions">
           <div className="view-toggle">
@@ -90,7 +90,7 @@ export function SkillsPanel() {
       )}
 
       {filtered.length === 0 ? (
-        <div className="empty-state"><p>暂无匹配的技能</p></div>
+        <div className="empty-state"><p>{t('common.noMatch')}</p></div>
       ) : viewMode === 'card' ? (
         <div className="skill-grid">
           {filtered.map((s) => (
@@ -100,7 +100,7 @@ export function SkillsPanel() {
                 <span className="skill-name">{s.name}</span>
                 <span className="skill-category">{s.category}</span>
               </div>
-              <div className="skill-desc">{s.description || '无描述'}</div>
+              <div className="skill-desc">{s.description || t('common.noDesc')}</div>
               <div className="skill-meta">
                 <div className="skill-tags">
                   {s.tags?.slice(0, 4).map((t) => <span key={t} className="skill-tag">{t}</span>)}
@@ -121,7 +121,7 @@ export function SkillsPanel() {
                     <span className="mcp-name">{s.name}</span>
                     <span className="skill-category" style={{ fontSize: 10 }}>{s.category}</span>
                   </div>
-                  <div className="mcp-detail">{s.description || '无描述'}</div>
+                  <div className="mcp-detail">{s.description || t('common.noDesc')}</div>
                   <div className="mcp-meta">
                     <span>{s.tags?.slice(0, 4).join(', ') || '-'}</span>
                     <span>{formatSize(s.size)}</span>
@@ -133,10 +133,10 @@ export function SkillsPanel() {
           {totalPages > 1 && (
             <div className="pagination">
               <button className="btn btn-secondary btn-sm" disabled={page <= 1}
-                onClick={() => goPage(page - 1)}>上一页</button>
-              <span className="pagination-info">{page} / {totalPages}（共 {total} 条）</span>
+                onClick={() => goPage(page - 1)}>{t('history.prevPage')}</button>
+              <span className="pagination-info">{page} / {totalPages}（{t('common.total')} {total} 条）</span>
               <button className="btn btn-secondary btn-sm" disabled={page >= totalPages}
-                onClick={() => goPage(page + 1)}>下一页</button>
+                onClick={() => goPage(page + 1)}>{t('history.nextPage')}</button>
             </div>
           )}
         </>

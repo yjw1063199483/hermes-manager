@@ -1,10 +1,12 @@
 import { useState } from 'react'
+import { useT } from '../../i18n'
 import { useAppStore } from '../../stores/appStore'
 import { api } from '../../api/client'
 import type { MCPServer } from '../../types/mcp'
 
 export function MCPForm() {
   const data = useAppStore((s) => s.drawerData) as MCPServer | null
+  const { t } = useT()
   const mode = useAppStore((s) => s.drawerMode)
   const close = useAppStore((s) => s.closeDrawer)
   const addToast = useAppStore((s) => s.addToast)
@@ -51,17 +53,17 @@ export function MCPForm() {
   return (
     <>
       <div className="drawer-header">
-        <h2>{isEdit ? '编辑 MCP' : '添加 MCP 服务器'}</h2>
+        <h2>{isEdit ? t('mcp.editMCP') : t('mcp.addMCP')}</h2>
         <button className="btn-icon" onClick={close}>✕</button>
       </div>
       <div className="drawer-body">
         <div className="form-group">
-          <label className="form-label">名称 *</label>
+          <label className="form-label">{t('mcp.name')}</label>
           <input className="form-input" value={name} onChange={(e) => setName(e.target.value)}
             readOnly={isEdit} />
         </div>
         <div className="form-group">
-          <label className="form-label">类型</label>
+          <label className="form-label">{t('common.type')}</label>
           <select className="form-select" value={type} onChange={(e) => setType(e.target.value as 'stdio' | 'http')}
             disabled={isEdit}>
             <option value="stdio">stdio (Command)</option>
@@ -71,15 +73,15 @@ export function MCPForm() {
         {type === 'stdio' ? (
           <>
             <div className="form-group">
-              <label className="form-label">命令 *</label>
+              <label className="form-label">{t('mcp.command')}</label>
               <input className="form-input" value={command} onChange={(e) => setCmd(e.target.value)} placeholder="python" />
             </div>
             <div className="form-group">
-              <label className="form-label">参数（空格分隔）</label>
+              <label className="form-label">{t('common.args')}</label>
               <input className="form-input" value={args} onChange={(e) => setArgs(e.target.value)} placeholder="-m my_mcp" />
             </div>
             <div className="form-group">
-              <label className="form-label">环境变量（KEY=VALUE，每行一个）</label>
+              <label className="form-label">{t('common.env')}</label>
               <textarea className="form-textarea" value={env} onChange={(e) => setEnv(e.target.value)}
                 style={{ minHeight: 80 }} />
             </div>
@@ -91,21 +93,21 @@ export function MCPForm() {
           </div>
         )}
         <div className="form-group">
-          <label className="form-label">自动批准工具（每行一个）</label>
+          <label className="form-label">{t('common.autoApprove')}</label>
           <textarea className="form-textarea" value={autoApprove} onChange={(e) => setAA(e.target.value)}
             style={{ minHeight: 80 }} />
         </div>
         <div className="form-group">
-          <label className="form-label">超时 (秒)</label>
+          <label className="form-label">{t('common.timeout')}</label>
           <input className="form-input" type="number" value={timeout} onChange={(e) => setTimeout_(Number(e.target.value))} />
         </div>
       </div>
       <div className="drawer-footer">
         <span></span>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button className="btn btn-secondary" onClick={close}>取消</button>
+          <button className="btn btn-secondary" onClick={close}>{t('common.cancel')}</button>
           <button className="btn btn-primary" onClick={handleSave} disabled={saving}>
-            {saving ? '保存中...' : isEdit ? '保存' : '添加'}
+            {saving ? t('common.saving') : isEdit ? t('common.save') : t('common.add')}
           </button>
         </div>
       </div>

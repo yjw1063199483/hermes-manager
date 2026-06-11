@@ -24,12 +24,20 @@ const zh: Translations = {
   'panel.history': 'History',
   'panel.toolsets': 'Toolsets',
   'panel.market': '市场',
+  'panel.skills.subtitle': '管理可复用的 Agent 技能',
+  'panel.mcp.subtitle': '配置 Model Context Protocol 服务器',
+  'panel.memory.subtitle': '管理 Agent 和 User 持久记忆',
+  'panel.toolsets.subtitle': '按平台启用或禁用工具组',
+  'panel.market.subtitle': '发现和安装技能、MCP 服务器、插件',
 
   // Common
   'common.search': '搜索...',
   'common.loading': '加载中...',
   'common.empty': '暂无数据',
+  'common.noMatch': '暂无匹配',
+  'common.noDesc': '无描述',
   'common.save': '保存',
+  'common.saving': '保存中...',
   'common.cancel': '取消',
   'common.delete': '删除',
   'common.create': '新建',
@@ -49,11 +57,44 @@ const zh: Translations = {
   'common.disabled': '已禁用',
   'common.success': '操作成功',
   'common.error': '操作失败',
+  'common.remove': '移除',
+  'common.add': '添加',
+  'common.addNew': '+ 新增',
+  'common.name': '名称',
+  'common.type': '类型',
+  'common.command': '命令',
+  'common.args': '参数（空格分隔）',
+  'common.env': '环境变量（KEY=VALUE，每行一个）',
+  'common.timeout': '超时 (秒)',
+  'common.autoApprove': '自动批准工具（每行一个）',
+  'common.none': '无',
+  'common.key': '按 Esc 关闭',
+
+  // Detail
+  'detail.confirmDelete': '确定永久删除 "{name}"？',
+  'detail.confirmDeleteMcp': '确定移除 MCP "{name}"？',
+  'detail.confirmDeleteMemory': '确定删除此条？',
+  'detail.basicInfo': '基本信息',
+  'detail.metadata': '元数据',
+  'detail.category': '分类',
+  'detail.version': '版本',
+  'detail.author': '作者',
+  'detail.size': '大小',
+  'detail.tags': '标签',
+  'detail.content': '内容',
+  'detail.noContent': '无内容',
+  'detail.source': '来源',
+  'detail.installs': '安装量',
+  'detail.page': '页面',
+  'detail.records': '{n} 条记录',
+  'detail.search': '搜索消息内容...',
+  'detail.noMsg': '无消息',
+  'detail.noMatchMsg': '无匹配消息',
+  'detail.messages': '{n} 条消息',
 
   // History
   'history.total': '个会话',
   'history.tokens': 'tokens',
-  'history.copyHint': '会话ID已复制，可用 hermes -r {id}... 打开',
   'history.prevPage': '上一页',
   'history.nextPage': '下一页',
   'history.selectAll': '全选',
@@ -61,6 +102,7 @@ const zh: Translations = {
   'history.confirmDelete': '确定删除 {n} 个会话？不可撤销。',
   'history.selected': '已选',
   'history.batchDelete': '确认删除',
+  'history.copyHint': '会话ID已复制，可用 hermes -r {id}... 打开',
 
   // Skills
   'skills.create': '+ 新建技能',
@@ -68,15 +110,42 @@ const zh: Translations = {
   'skills.noContent': '暂无内容',
   'skills.preview': '预览',
   'skills.edit': '编辑',
+  'skills.editSkill': '编辑技能',
+  'skills.createSkill': '新建技能',
+  'skills.content': '内容 (Markdown)',
+  'skills.description': '描述',
+  'skills.tags': '标签（逗号分隔）',
+  'skills.category': '分类',
+  'skills.dirname': '目录名',
+  'skills.name': '名称 *',
+  'skills.createBtn': '创建',
 
   // MCP
   'mcp.add': '+ 添加 MCP',
   'mcp.export': '导出',
+  'mcp.editMCP': '编辑 MCP',
+  'mcp.addMCP': '添加 MCP 服务器',
+  'mcp.name': '名称 *',
+  'mcp.command': '命令 *',
+  'mcp.autoTools': '{n} 个自动批准工具',
+  'mcp.timeoutFmt': '超时: {n}s',
+  'mcp.prev': '上一页',
+  'mcp.next': '下一页',
+  'mcp.perPage': '条',
 
   // Memory
   'memory.agent': 'Agent',
   'memory.user': 'User',
   'memory.add': '添加',
+  'memory.placeholder': '输入新条目...',
+  'memory.sofia': 'SOUL.md',
+
+  // Soul
+  'soul.title': '人设 · SOUL.md',
+  'soul.edit': '编辑',
+  'soul.preview': '预览',
+  'soul.unsaved': '⚠ 有未保存的更改',
+  'soul.loadHint': 'SOUL.md 在每次对话开始时加载',
 
   // Market
   'market.skillsHub': 'Skills Hub',
@@ -99,6 +168,11 @@ const zh: Translations = {
   'market.terminalFail': '安装失败',
   'market.mcpTerminalTitle': '快速安装 · 粘贴任意 MCP 安装命令',
   'market.mcpTerminalPlaceholder': 'npx -y @modelcontextprotocol/server-filesystem',
+  'market.translating': '翻译中...',
+  'market.translated': '✓ 已翻译',
+  'market.translate': '🌐 翻译中文',
+  'market.official': '🏛 官方',
+  'market.community': '🌐 社区',
 
   // Import/Export
   'import.success': '导入完成',
@@ -106,15 +180,15 @@ const zh: Translations = {
   'import.selectZip': '请选择 .zip 文件',
 
   // SOUL
-  'soul.edit': '编辑 SOUL.md',
-  'soul.preview': '预览 SOUL.md',
+  'soul.editSoul': '编辑 SOUL.md',
+  'soul.previewSoul': '预览 SOUL.md',
 
   // Toolsets
   'toolsets.save': '保存配置',
+  'toolsets.disabledGlobal': '全局禁用',
 }
 
 const en: Translations = {
-  // Sidebar
   'sidebar.skills': 'Skills',
   'sidebar.mcp': 'MCP',
   'sidebar.memory': 'Memory',
@@ -126,19 +200,25 @@ const en: Translations = {
   'sidebar.import': 'Import Config',
   'sidebar.model': 'Model',
 
-  // Panels
   'panel.skills': 'Skills',
   'panel.mcp': 'MCP',
   'panel.memory': 'Memory',
   'panel.history': 'History',
   'panel.toolsets': 'Toolsets',
   'panel.market': 'Market',
+  'panel.skills.subtitle': 'Manage reusable Agent skills',
+  'panel.mcp.subtitle': 'Configure Model Context Protocol servers',
+  'panel.memory.subtitle': 'Manage Agent and User persistent memory',
+  'panel.toolsets.subtitle': 'Enable or disable toolsets per platform',
+  'panel.market.subtitle': 'Discover and install skills, MCP servers, plugins',
 
-  // Common
   'common.search': 'Search...',
   'common.loading': 'Loading...',
   'common.empty': 'No data',
+  'common.noMatch': 'No match',
+  'common.noDesc': 'No description',
   'common.save': 'Save',
+  'common.saving': 'Saving...',
   'common.cancel': 'Cancel',
   'common.delete': 'Delete',
   'common.create': 'Create',
@@ -158,8 +238,40 @@ const en: Translations = {
   'common.disabled': 'Disabled',
   'common.success': 'Success',
   'common.error': 'Error',
+  'common.remove': 'Remove',
+  'common.add': 'Add',
+  'common.addNew': '+ Add New',
+  'common.name': 'Name',
+  'common.type': 'Type',
+  'common.command': 'Command',
+  'common.args': 'Args (space-separated)',
+  'common.env': 'Environment (KEY=VALUE, one per line)',
+  'common.timeout': 'Timeout (seconds)',
+  'common.autoApprove': 'Auto-approve tools (one per line)',
+  'common.none': 'None',
+  'common.key': 'Press Esc to close',
 
-  // History
+  'detail.confirmDelete': 'Permanently delete "{name}"?',
+  'detail.confirmDeleteMcp': 'Remove MCP "{name}"?',
+  'detail.confirmDeleteMemory': 'Delete this entry?',
+  'detail.basicInfo': 'Basic Info',
+  'detail.metadata': 'Metadata',
+  'detail.category': 'Category',
+  'detail.version': 'Version',
+  'detail.author': 'Author',
+  'detail.size': 'Size',
+  'detail.tags': 'Tags',
+  'detail.content': 'Content',
+  'detail.noContent': 'No content',
+  'detail.source': 'Source',
+  'detail.installs': 'Installs',
+  'detail.page': 'Page',
+  'detail.records': '{n} records',
+  'detail.search': 'Search messages...',
+  'detail.noMsg': 'No messages',
+  'detail.noMatchMsg': 'No matching messages',
+  'detail.messages': '{n} messages',
+
   'history.total': 'sessions',
   'history.tokens': 'tokens',
   'history.prevPage': 'Previous',
@@ -171,23 +283,45 @@ const en: Translations = {
   'history.batchDelete': 'Delete Selected',
   'history.copyHint': 'Session ID copied. Resume with: hermes -r {id}...',
 
-  // Skills
   'skills.create': '+ New Skill',
   'skills.search': 'Search skills...',
   'skills.noContent': 'No content',
   'skills.preview': 'Preview',
   'skills.edit': 'Edit',
+  'skills.editSkill': 'Edit Skill',
+  'skills.createSkill': 'New Skill',
+  'skills.content': 'Content (Markdown)',
+  'skills.description': 'Description',
+  'skills.tags': 'Tags (comma-separated)',
+  'skills.category': 'Category',
+  'skills.dirname': 'Directory',
+  'skills.name': 'Name *',
+  'skills.createBtn': 'Create',
 
-  // MCP
   'mcp.add': '+ Add MCP',
   'mcp.export': 'Export',
+  'mcp.editMCP': 'Edit MCP',
+  'mcp.addMCP': 'Add MCP Server',
+  'mcp.name': 'Name *',
+  'mcp.command': 'Command *',
+  'mcp.autoTools': '{n} auto-approved tools',
+  'mcp.timeoutFmt': 'Timeout: {n}s',
+  'mcp.prev': 'Previous',
+  'mcp.next': 'Next',
+  'mcp.perPage': 'items',
 
-  // Memory
   'memory.agent': 'Agent',
   'memory.user': 'User',
   'memory.add': 'Add',
+  'memory.placeholder': 'Enter new entry...',
+  'memory.sofia': 'SOUL.md',
 
-  // Market
+  'soul.title': 'SOUL.md',
+  'soul.edit': 'Edit',
+  'soul.preview': 'Preview',
+  'soul.unsaved': '⚠ Unsaved changes',
+  'soul.loadHint': 'SOUL.md is loaded at the start of each conversation',
+
   'market.skillsHub': 'Skills Hub',
   'market.mcpCatalog': 'MCP Catalog',
   'market.plugins': 'Plugins',
@@ -208,18 +342,21 @@ const en: Translations = {
   'market.terminalFail': 'Install failed',
   'market.mcpTerminalTitle': 'Quick Install · Paste any MCP install command',
   'market.mcpTerminalPlaceholder': 'npx -y @modelcontextprotocol/server-filesystem',
+  'market.translating': 'Translating...',
+  'market.translated': '✓ Translated',
+  'market.translate': '🌐 Translate to EN',
+  'market.official': '🏛 Official',
+  'market.community': '🌐 Community',
 
-  // Import/Export
   'import.success': 'Import successful',
   'import.fail': 'Import failed',
   'import.selectZip': 'Please select a .zip file',
 
-  // SOUL
-  'soul.edit': 'Edit SOUL.md',
-  'soul.preview': 'Preview SOUL.md',
+  'soul.editSoul': 'Edit SOUL.md',
+  'soul.previewSoul': 'Preview SOUL.md',
 
-  // Toolsets
   'toolsets.save': 'Save Config',
+  'toolsets.disabledGlobal': 'Global Disabled',
 }
 
 const all: Record<Lang, Translations> = { zh, en }

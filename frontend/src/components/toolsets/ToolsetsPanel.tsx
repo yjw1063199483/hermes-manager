@@ -41,7 +41,7 @@ export function ToolsetsPanel() {
       <header className="panel-header">
         <div>
           <h1>{t('panel.toolsets')}</h1>
-          <p className="subtitle">按平台启用或禁用工具组</p>
+          <p className="subtitle">{t('panel.toolsets.subtitle')}</p>
         </div>
         <button className="btn btn-primary" onClick={save}>💾 {t('toolsets.save')}</button>
       </header>
@@ -66,7 +66,7 @@ export function ToolsetsPanel() {
 
       {disabledToolsets.length > 0 && (
         <div className="toolset-platform">
-          <h3>全局禁用</h3>
+          <h3>{t('toolsets.disabledGlobal')}</h3>
           <div className="toolset-grid">
             {disabledToolsets.map((tool) => (
               <div key={tool} className="toolset-item"

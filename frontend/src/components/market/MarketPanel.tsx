@@ -14,7 +14,7 @@ export function MarketPanel() {
       <header className="panel-header">
         <div>
           <h1>{t('panel.market')}</h1>
-          <p className="subtitle">发现和安装技能、MCP 服务器、插件</p>
+          <p className="subtitle">{t('panel.market.subtitle')}</p>
         </div>
       </header>
       <div className="market-tabs">

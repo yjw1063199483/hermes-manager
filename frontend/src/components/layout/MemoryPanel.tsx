@@ -52,7 +52,7 @@ export function MemoryPanel() {
   }
 
   const handleDelete = async (idx: number) => {
-    if (!confirm('确定删除此条？')) return
+    if (!confirm(t('detail.confirmDeleteMemory'))) return
     try {
       await api.deleteMemoryEntry(memoryType, idx)
       entries.splice(idx, 1)
@@ -66,7 +66,7 @@ export function MemoryPanel() {
       <header className="panel-header">
         <div>
           <h1>{t('panel.memory')}</h1>
-          <p className="subtitle">管理 Agent 和 User 持久记忆</p>
+          <p className="subtitle">{t('panel.memory.subtitle')}</p>
         </div>
         <div className="header-actions">
           <div className="view-toggle">
@@ -75,26 +75,26 @@ export function MemoryPanel() {
             <button className={`btn btn-sm ${memoryType === 'user' ? 'btn-primary' : 'btn-secondary'}`}
               onClick={() => setMemoryType('user')}>{t('memory.user')}</button>
           </div>
-          <button className="btn btn-primary" onClick={() => setAdding(true)}>+ 新增</button>
+          <button className="btn btn-primary" onClick={() => setAdding(true)}>{t('common.addNew')}</button>
         </div>
       </header>
 
       {adding && (
         <div style={{ marginBottom: 16, padding: 14, background: 'var(--bg-card)', borderRadius: 8, border: '1px solid var(--border)' }}>
           <textarea className="form-textarea" value={newText} onChange={(e) => setNewText(e.target.value)}
-            placeholder="输入新条目..." style={{ minHeight: 80, marginBottom: 8 }} autoFocus />
+            placeholder={t('memory.placeholder')} style={{ minHeight: 80, marginBottom: 8 }} autoFocus />
           <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
             <button className="btn btn-secondary btn-sm" onClick={() => { setAdding(false); setNewText('') }}>取消</button>
-            <button className="btn btn-primary btn-sm" onClick={handleAdd}>添加</button>
+            <button className="btn btn-primary btn-sm" onClick={handleAdd}>{t('common.add')}</button>
           </div>
         </div>
       )}
 
       <div className="mcp-list">
         {loading ? (
-          <p style={{ color: 'var(--text-muted)', padding: 20 }}>加载中...</p>
+          <p style={{ color: 'var(--text-muted)', padding: 20 }}>{t('common.loading')}</p>
         ) : entries.length === 0 ? (
-          <div className="empty-state"><p>暂无条目</p></div>
+          <div className="empty-state"><p>{t('common.empty')}</p></div>
         ) : (
           entries.map((e) => (
             <div key={e.index} className="mcp-card">
@@ -103,9 +103,9 @@ export function MemoryPanel() {
                   <span style={{ fontSize: 11, color: 'var(--text-muted)', fontWeight: 600 }}>#{e.index + 1}</span>
                   <div style={{ display: 'flex', gap: 6 }}>
                     <button className="btn btn-secondary btn-sm"
-                      onClick={(ev) => { ev.stopPropagation(); startEdit(e) }}>编辑</button>
+                      onClick={(ev) => { ev.stopPropagation(); startEdit(e) }}>{t('common.edit')}</button>
                     <button className="btn btn-danger btn-sm"
-                      onClick={(ev) => { ev.stopPropagation(); handleDelete(e.index) }}>删除</button>
+                      onClick={(ev) => { ev.stopPropagation(); handleDelete(e.index) }}>{t('common.delete')}</button>
                   </div>
                 </div>
                 {editingIdx === e.index ? (
@@ -114,8 +114,8 @@ export function MemoryPanel() {
                       onChange={(ev) => setEditText(ev.target.value)}
                       style={{ minHeight: 80, marginBottom: 8, fontSize: 13, lineHeight: 1.6 }} autoFocus />
                     <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-                      <button className="btn btn-secondary btn-sm" onClick={() => setEditingIdx(null)}>取消</button>
-                      <button className="btn btn-primary btn-sm" onClick={saveEdit}>保存</button>
+                      <button className="btn btn-secondary btn-sm" onClick={() => setEditingIdx(null)}>{t('common.cancel')}</button>
+                      <button className="btn btn-primary btn-sm" onClick={saveEdit}>{t('common.save')}</button>
                     </div>
                   </>
                 ) : (

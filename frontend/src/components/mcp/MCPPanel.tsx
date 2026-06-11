@@ -30,7 +30,7 @@ export function MCPPanel() {
       <header className="panel-header">
         <div>
           <h1>{t('panel.mcp')}</h1>
-          <p className="subtitle">配置 Model Context Protocol 服务器</p>
+          <p className="subtitle">{t('panel.mcp.subtitle')}</p>
         </div>
         <button className="btn btn-primary" onClick={() => openDrawer('mcp', 'create')}>
           {t('mcp.add')}
@@ -47,8 +47,8 @@ export function MCPPanel() {
               </div>
               <div className="mcp-detail">{m.type === 'stdio' ? `${m.command} ${m.args?.join(' ') ?? ''}` : m.url}</div>
               <div className="mcp-meta">
-                <span>{m.autoApprove?.length ?? 0} 个自动批准工具</span>
-                {m.timeout ? <span>超时: {m.timeout}s</span> : null}
+                <span>{t('mcp.autoTools', { n: m.autoApprove?.length ?? 0 })}</span>
+                {m.timeout ? <span>{t('mcp.timeoutFmt', { n: m.timeout })}</span> : null}
               </div>
             </div>
           </div>
@@ -57,10 +57,10 @@ export function MCPPanel() {
 
       <div className="pagination">
         <button className="btn btn-secondary btn-sm" disabled={page <= 1}
-          onClick={() => setPage(page - 1)}>上一页</button>
-        <span className="pagination-info">{page} / {totalPages}（共 {total} 条）</span>
+          onClick={() => setPage(page - 1)}>{t('mcp.prev')}</button>
+        <span className="pagination-info">{page} / {totalPages}（{t('common.total')} {total} {t('mcp.perPage')}）</span>
         <button className="btn btn-secondary btn-sm" disabled={page >= totalPages}
-          onClick={() => setPage(page + 1)}>下一页</button>
+          onClick={() => setPage(page + 1)}>{t('mcp.next')}</button>
       </div>
     </section>
   )

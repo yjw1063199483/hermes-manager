@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { api } from '../../api/client'
+import { useT } from '../../i18n'
 import { useAppStore } from '../../stores/appStore'
 
 type Message = { id: number; role: string; content: string | null; tool_name: string | null; timestamp: string | null }
 
 export function SessionDetailView() {
   const data = useAppStore((s) => s.drawerData) as { session_id: string; title: string | null } | null
+  const { t } = useT()
   const closeDrawer = useAppStore((s) => s.closeDrawer)
   const [messages, setMessages] = useState<Message[]>([])
   const [loading, setLoading] = useState(true)
@@ -35,15 +37,15 @@ export function SessionDetailView() {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
             </svg>
-            <input placeholder="搜索消息内容..." value={search}
+            <input placeholder={t('detail.search')} value={search}
               onChange={(e) => setSearch(e.target.value)} />
           </div>
         </div>
 
         {loading ? (
-          <p style={{ color: 'var(--text-muted)', fontSize: 13 }}>加载中...</p>
+          <p style={{ color: 'var(--text-muted)', fontSize: 13 }}>{t('common.loading')}</p>
         ) : messages.length === 0 ? (
-          <div className="empty-state"><p>{search ? '无匹配消息' : '无消息'}</p></div>
+          <div className="empty-state"><p>{search ? t('detail.noMatchMsg') : t('detail.noMsg')}</p></div>
         ) : (
           <div style={{ maxHeight: 'calc(100vh - 220px)', overflowY: 'auto' }}>
             {messages.map((m) => (
@@ -74,7 +76,7 @@ export function SessionDetailView() {
       </div>
       <div className="drawer-footer">
         <span className="drawer-footer-hint">
-          {messages.length} 条消息{search ? ` · 搜索: "${search}"` : ''}
+          {t('detail.messages', { n: messages.length })}{search ? ` · 搜索: "${search}"` : ''}
         </span>
       </div>
     </>

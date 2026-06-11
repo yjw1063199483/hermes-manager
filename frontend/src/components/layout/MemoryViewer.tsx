@@ -1,11 +1,13 @@
 import { useState, useEffect } from 'react'
 import { api } from '../../api/client'
+import { useT } from '../../i18n'
 import { useAppStore } from '../../stores/appStore'
 
 type Entry = { index: number; content: string }
 
 export function MemoryViewer() {
   const [memoryType, setMemoryType] = useState<'memory' | 'user'>('memory')
+  const { t } = useT()
   const [entries, setEntries] = useState<Entry[]>([])
   const [loading, setLoading] = useState(true)
   const [editingIdx, setEditingIdx] = useState<number | null>(null)
@@ -58,7 +60,7 @@ export function MemoryViewer() {
   }
 
   const handleDelete = async (idx: number) => {
-    if (!confirm('确定删除此条？')) return
+    if (!confirm(t('detail.confirmDeleteMemory'))) return
     try {
       await api.deleteMemoryEntry(memoryType, idx)
       entries.splice(idx, 1)
@@ -83,7 +85,7 @@ export function MemoryViewer() {
       </div>
       <div className="drawer-body">
         {loading ? (
-          <p style={{ color: 'var(--text-muted)' }}>加载中...</p>
+          <p style={{ color: 'var(--text-muted)' }}>{t('common.loading')}</p>
         ) : (
           <>
             {/* 新增 */}
@@ -93,18 +95,18 @@ export function MemoryViewer() {
                   className="form-textarea"
                   value={newText}
                   onChange={(e) => setNewText(e.target.value)}
-                  placeholder="输入新条目..."
+                  placeholder={t('memory.placeholder')}
                   style={{ minHeight: 80, marginBottom: 8 }}
                   autoFocus
                 />
                 <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-                  <button className="btn btn-secondary btn-sm" onClick={() => { setAdding(false); setNewText('') }}>取消</button>
-                  <button className="btn btn-primary btn-sm" onClick={handleAdd}>添加</button>
+                  <button className="btn btn-secondary btn-sm" onClick={() => { setAdding(false); setNewText('') }}>{t('common.cancel')}</button>
+                  <button className="btn btn-primary btn-sm" onClick={handleAdd}>{t('common.add')}</button>
                 </div>
               </div>
             ) : (
               <button className="btn btn-primary btn-sm" onClick={() => setAdding(true)}
-                style={{ marginBottom: 16 }}>+ 新增条目</button>
+                style={{ marginBottom: 16 }}>{t('common.addNew')}</button>
             )}
 
             {/* 条目列表 */}
@@ -119,7 +121,7 @@ export function MemoryViewer() {
                   {editingIdx !== e.index && (
                     <div style={{ display: 'flex', gap: 6 }}>
                       <button className="btn btn-secondary btn-sm" onClick={() => startEdit(e)}>编辑</button>
-                      <button className="btn btn-danger btn-sm" onClick={() => handleDelete(e.index)}>删除</button>
+                      <button className="btn btn-danger btn-sm" onClick={() => handleDelete(e.index)}>{t('common.delete')}</button>
                     </div>
                   )}
                 </div>
@@ -130,8 +132,8 @@ export function MemoryViewer() {
                       style={{ minHeight: 80, marginBottom: 8, fontSize: 13, lineHeight: 1.6 }}
                       autoFocus />
                     <div style={{ display: 'flex', gap: 8, justifyContent: 'flex-end' }}>
-                      <button className="btn btn-secondary btn-sm" onClick={() => setEditingIdx(null)}>取消</button>
-                      <button className="btn btn-primary btn-sm" onClick={saveEdit}>保存</button>
+                      <button className="btn btn-secondary btn-sm" onClick={() => setEditingIdx(null)}>{t('common.cancel')}</button>
+                      <button className="btn btn-primary btn-sm" onClick={saveEdit}>{t('common.save')}</button>
                     </div>
                   </>
                 ) : (
@@ -145,7 +147,7 @@ export function MemoryViewer() {
         )}
       </div>
       <div className="drawer-footer">
-        <span className="drawer-footer-hint">{entries.length} 条记录 · 按 <kbd>Esc</kbd> 关闭</span>
+        <span className="drawer-footer-hint">{t('detail.records', { n: entries.length })} · <kbd>Esc</kbd> {t('common.key')}</span>
       </div>
     </>
   )

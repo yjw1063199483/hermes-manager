@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useT } from '../../i18n'
 import { useAppStore } from '../../stores/appStore'
 import { api } from '../../api/client'
 import type { SkillSummary } from '../../types/skill'
@@ -8,6 +9,7 @@ export function SkillForm() {
   const mode = useAppStore((s) => s.drawerMode)
   const closeDrawer = useAppStore((s) => s.closeDrawer)
   const addToast = useAppStore((s) => s.addToast)
+  const { t } = useT()
   const isEdit = mode === 'edit'
 
   const [name, setName] = useState(data?.name ?? '')
@@ -51,36 +53,36 @@ export function SkillForm() {
   return (
     <>
       <div className="drawer-header">
-        <h2>{isEdit ? '编辑技能' : '新建技能'}</h2>
+        <h2>{isEdit ? t('skills.editSkill') : t('skills.createSkill')}</h2>
         <button className="btn-icon" onClick={closeDrawer}>✕</button>
       </div>
       <div className="drawer-body">
         <div className="form-group">
-          <label className="form-label">分类</label>
+          <label className="form-label">{t('skills.category')}</label>
           <input className="form-input" value={category} onChange={(e) => setCategory(e.target.value)}
             readOnly={isEdit} />
         </div>
         {!isEdit && (
           <div className="form-group">
-            <label className="form-label">目录名</label>
+            <label className="form-label">{t('skills.dirname')}</label>
             <input className="form-input" value={dirName} onChange={(e) => setDirName(e.target.value)}
               placeholder="my-skill" />
           </div>
         )}
         <div className="form-group">
-          <label className="form-label">名称 *</label>
+          <label className="form-label">{t('skills.name')}</label>
           <input className="form-input" value={name} onChange={(e) => setName(e.target.value)} />
         </div>
         <div className="form-group">
-          <label className="form-label">描述</label>
+          <label className="form-label">{t('skills.description')}</label>
           <input className="form-input" value={description} onChange={(e) => setDesc(e.target.value)} />
         </div>
         <div className="form-group">
-          <label className="form-label">标签（逗号分隔）</label>
+          <label className="form-label">{t('skills.tags')}</label>
           <input className="form-input" value={tags} onChange={(e) => setTags(e.target.value)} />
         </div>
         <div className="form-group">
-          <label className="form-label">内容 (Markdown)</label>
+          <label className="form-label">{t('skills.content')}</label>
           <textarea className="form-textarea" value={body} onChange={(e) => setBody(e.target.value)}
             style={{ minHeight: 300 }} />
         </div>
@@ -88,9 +90,9 @@ export function SkillForm() {
       <div className="drawer-footer">
         <span></span>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button className="btn btn-secondary" onClick={closeDrawer}>取消</button>
+          <button className="btn btn-secondary" onClick={closeDrawer}>{t('common.cancel')}</button>
           <button className="btn btn-primary" onClick={handleSave} disabled={saving}>
-            {saving ? '保存中...' : isEdit ? '保存' : '创建'}
+            {saving ? t('common.saving') : isEdit ? t('common.save') : t('skills.createBtn')}
           </button>
         </div>
       </div>
