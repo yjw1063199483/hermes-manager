@@ -125,19 +125,21 @@ export function Sidebar() {
               try {
                 const r = await fetch('/api/v1/update/check')
                 const d = await r.json()
-                if (d.has_update) {
-                  if (confirm(`发现新版本 v${d.latest}，是否立即升级？`)) {
+                if (d.error) {
+                  addToast('检查失败: ' + d.error, 'error')
+                } else if (d.has_update) {
+                  if (confirm(`发现新版本 v${d.latest}（当前 v${d.current}），是否立即升级？`)) {
                     addToast('⏳ 正在升级...', 'info')
                     const ur = await fetch('/api/v1/update/upgrade', { method: 'POST' })
                     const ud = await ur.json()
                     addToast(ud.ok ? '✅ ' + ud.message : '❌ ' + (ud.error || '失败'), ud.ok ? 'success' : 'error')
                   }
                 } else {
-                  addToast('✅ 已是最新 v' + d.current, 'success')
+                  addToast(`✅ 已是最新 (v${d.current})`, 'success')
                 }
               } catch { addToast('检查失败', 'error') }
             }}>
-            🔄 v2.3.3
+            🔄 v2.3.4
           </button>
         </div>
       </div>
