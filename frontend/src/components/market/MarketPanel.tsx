@@ -35,6 +35,7 @@ export function MarketPanel() {
 /** 终端命令执行器 */
 function TerminalRunner() {
   const addToast = useAppStore((s) => s.addToast)
+  const { t } = useT()
   const [cmd, setCmd] = useState('')
   const [running, setRunning] = useState(false)
   const [progress, setProgress] = useState(0)
@@ -61,11 +62,11 @@ function TerminalRunner() {
 
       if (data.ok) {
         setProgress(100)
-        addToast('安装成功 — Skills 已刷新', 'success')
+        addToast(t('market.terminalSuccess'), 'success')
         useAppStore.getState().incRefreshKey()
       } else {
         setProgress(0)
-        addToast(data.output || '安装失败', 'error')
+        addToast(data.output || t('market.terminalFail'), 'error')
       }
     } catch (e: unknown) {
       clearInterval(timer)
@@ -83,7 +84,7 @@ function TerminalRunner() {
       width: '100%', maxWidth: 600, textAlign: 'left',
     }}>
       <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-        终端命令执行 · Hermes Agent
+        {t('market.terminalTitle')}
       </div>
       <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
         <span style={{ color: 'var(--green)', fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap' }}>$</span>
@@ -91,7 +92,7 @@ function TerminalRunner() {
           value={cmd}
           onChange={(e) => setCmd(e.target.value)}
           onKeyDown={(e) => { if (e.key === 'Enter') install() }}
-          placeholder="npx skills add owner/repo  或直接粘贴安装命令"
+          placeholder={t('market.terminalPlaceholder')}
           style={{
             flex: 1, background: '#0d0d1a', border: '1px solid var(--border)',
             borderRadius: 6, padding: '8px 12px', fontSize: 13,
@@ -101,7 +102,7 @@ function TerminalRunner() {
         />
         <button className="btn btn-primary btn-sm" onClick={install} disabled={running || !cmd.trim()}
           style={{ whiteSpace: 'nowrap', minWidth: 64, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '7px 14px' }}>
-          {running ? '执行中' : '安装'}
+          {running ? t('market.installing') : t('market.install')}
         </button>
       </div>
       {running && (
@@ -128,6 +129,7 @@ function TerminalRunner() {
 
 function MCPTerminalRunner() {
   const addToast = useAppStore((s) => s.addToast)
+  const { t } = useT()
   const [cmd, setCmd] = useState('')
   const [running, setRunning] = useState(false)
   const [progress, setProgress] = useState(0)
@@ -154,10 +156,10 @@ function MCPTerminalRunner() {
 
       if (data.ok) {
         setProgress(100)
-        addToast('安装成功', 'success')
+        addToast(t('market.terminalSuccess'), 'success')
       } else {
         setProgress(0)
-        addToast(data.output || '安装失败', 'error')
+        addToast(data.output || t('market.terminalFail'), 'error')
       }
     } catch (e: unknown) {
       clearInterval(timer)
@@ -175,7 +177,7 @@ function MCPTerminalRunner() {
       width: '100%', maxWidth: 600, textAlign: 'left',
     }}>
       <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--text-muted)', marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-        快速安装 · 粘贴任意 MCP 安装命令
+        {t('market.mcpTerminalTitle')}
       </div>
       <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
         <span style={{ color: 'var(--green)', fontSize: 13, fontWeight: 600, whiteSpace: 'nowrap' }}>$</span>
@@ -183,7 +185,7 @@ function MCPTerminalRunner() {
           value={cmd}
           onChange={(e) => setCmd(e.target.value)}
           onKeyDown={(e) => { if (e.key === 'Enter') install() }}
-          placeholder="npx -y @modelcontextprotocol/server-filesystem"
+          placeholder={t('market.mcpTerminalPlaceholder')}
           style={{
             flex: 1, background: '#0d0d1a', border: '1px solid var(--border)',
             borderRadius: 6, padding: '8px 12px', fontSize: 13,
@@ -193,7 +195,7 @@ function MCPTerminalRunner() {
         />
         <button className="btn btn-primary btn-sm" onClick={install} disabled={running || !cmd.trim()}
           style={{ whiteSpace: 'nowrap', minWidth: 64, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '7px 14px' }}>
-          {running ? '执行中' : '安装'}
+          {running ? t('market.installing') : t('market.install')}
         </button>
       </div>
       {running && (
@@ -213,16 +215,16 @@ function MCPTerminalRunner() {
 }
 
 function SkillsHub() {
+  const { t } = useT()
   return (
     <div style={{
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
       minHeight: 'calc(100vh - 220px)', gap: 20, textAlign: 'center', padding: 40
     }}>
       <div style={{ fontSize: 56 }}>🛒</div>
-      <h2 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>Agent 技能市场</h2>
+      <h2 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>{t('market.skillsTitle')}</h2>
       <p style={{ color: 'var(--text-secondary)', maxWidth: 460, lineHeight: 1.7, fontSize: 14, margin: 0 }}>
-        skills.sh 是 AI Agent 技能的全球统一目录，聚合 9,600+ 技能。<br/>
-        Hermes、Claude Code、Cursor 等所有主流 Agent 都通过它发现和安装技能。
+        {t('market.skillsDesc')}
       </p>
       <a href="https://skills.sh" target="_blank" rel="noopener"
         style={{
@@ -231,10 +233,10 @@ function SkillsHub() {
           background: 'var(--accent)', color: '#fff',
           textDecoration: 'none', fontSize: 15, fontWeight: 600,
         }}>
-        打开 skills.sh ↗
+        {t('market.openSkillsSh')}
       </a>
       <p style={{ color: 'var(--text-muted)', fontSize: 12, margin: 0 }}>
-        在 skills.sh 复制安装命令，粘贴到下方终端执行
+        {t('market.skillsHint')}
       </p>
 
       <TerminalRunner />
@@ -243,16 +245,16 @@ function SkillsHub() {
 }
 
 function MCPMarketList() {
+  const { t } = useT()
   return (
     <div style={{
       display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
       minHeight: 'calc(100vh - 220px)', gap: 20, textAlign: 'center', padding: 40
     }}>
       <div style={{ fontSize: 56 }}>🔌</div>
-      <h2 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>MCP 服务器市场</h2>
+      <h2 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>{t('market.mcpTitle')}</h2>
       <p style={{ color: 'var(--text-secondary)', maxWidth: 460, lineHeight: 1.7, fontSize: 14, margin: 0 }}>
-        MCP 是 AI Agent 连接外部工具的标准协议。<br/>
-        mcp.so 和 smithery.ai 是目前最主流的 MCP 服务器目录。
+        {t('market.mcpDesc')}
       </p>
       <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap', justifyContent: 'center' }}>
         <a href="https://mcp.so" target="_blank" rel="noopener"
@@ -275,7 +277,7 @@ function MCPMarketList() {
         </a>
       </div>
       <p style={{ color: 'var(--text-muted)', fontSize: 12, margin: 0 }}>
-        点进具体 MCP 服务器页面，复制 <code style={{ background: 'var(--bg-input)', padding: '1px 6px', borderRadius: 3 }}>npx -y @xxx/server-xxx</code> 命令粘贴执行
+        {t('market.mcpHint')}
       </p>
 
       <MCPTerminalRunner />
@@ -285,6 +287,7 @@ function MCPMarketList() {
 
 function PluginMarket() {
   const addToast = useAppStore((s) => s.addToast)
+  const { t } = useT()
   const [items, setItems] = useState<MarketPlugin[]>([])
   const [loading, setLoading] = useState(true)
 
@@ -295,7 +298,7 @@ function PluginMarket() {
       .finally(() => setLoading(false))
   }, [])
 
-  if (loading) return <p style={{ padding: 20, color: 'var(--text-muted)' }}>加载中...</p>
+  if (loading) return <p style={{ padding: 20, color: 'var(--text-muted)' }}>{t('common.loading')}</p>
 
   return (
     <div style={{
@@ -303,9 +306,9 @@ function PluginMarket() {
       minHeight: 'calc(100vh - 220px)', gap: 20, padding: 40
     }}>
       <div style={{ fontSize: 56 }}>🧩</div>
-      <h2 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>插件</h2>
+      <h2 style={{ fontSize: 22, fontWeight: 700, margin: 0 }}>{t('market.pluginsTitle')}</h2>
       <p style={{ color: 'var(--text-secondary)', maxWidth: 400, lineHeight: 1.7, fontSize: 14, margin: 0, textAlign: 'center' }}>
-        Hermes 内置插件，暂无外部市场。
+        {t('market.pluginsDesc')}
       </p>
 
       <div style={{ width: '100%', maxWidth: 500 }}>
@@ -322,10 +325,10 @@ function PluginMarket() {
               onClick={() => api.togglePlugin(p.name, !p.enabled)
                 .then(() => {
                   setItems(prev => prev.map(i => i.name === p.name ? { ...i, enabled: !p.enabled } : i))
-                  addToast(p.enabled ? '已禁用' : '已启用', 'success')
+                  addToast(p.enabled ? t('common.disabled') : t('common.enabled'), 'success')
                 })
                 .catch((e: Error) => addToast(e.message, 'error'))}>
-              {p.enabled ? '已启用' : '已禁用'}
+              {p.enabled ? t('common.enabled') : t('common.disabled')}
             </button>
           </div>
         ))}
