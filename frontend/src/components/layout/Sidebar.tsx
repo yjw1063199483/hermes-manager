@@ -87,17 +87,20 @@ export function Sidebar() {
           <span>🛒</span>
           <span>{t('sidebar.market')}</span>
         </button>
-        <a className="nav-item" href="/api/v1/export" download="hermes-export.zip"
-          style={{ width: '100%', textDecoration: 'none' }}>
-          <span>📦</span>
-          <span>{t('sidebar.export')}</span>
-        </a>
-        <button className="nav-item"
-          onClick={() => fileInputRef.current?.click()}
-          style={{ width: '100%', border: 'none', background: 'none', cursor: 'pointer' }}>
-          <span>📥</span>
-          <span>{t('sidebar.import')}</span>
-        </button>
+        <div className="nav-item" style={{ width: '100%', display: 'flex', alignItems: 'center', gap: 4, justifyContent: 'center', padding: '8px 12px' }}>
+          <a href="/api/v1/export" download="hermes-export.zip"
+            style={{ textDecoration: 'none', color: 'inherit', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span>📦</span>
+            <span style={{ fontSize: 13 }}>{t('sidebar.export')}</span>
+          </a>
+          <span style={{ color: 'var(--text-muted)', fontSize: 11, margin: '0 2px' }}>|</span>
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            style={{ border: 'none', background: 'none', color: 'inherit', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6, padding: 0, fontSize: 13 }}>
+            <span>📥</span>
+            <span>{t('sidebar.import')}</span>
+          </button>
+        </div>
         <input ref={fileInputRef} type="file" accept=".zip"
           style={{ display: 'none' }} onChange={handleImport} />
 
