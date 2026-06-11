@@ -113,11 +113,14 @@ export function Sidebar() {
 
         <div className="stats-mini">
           <div className="stat-line">
-            <span className="stat-label">{t('sidebar.model')}</span>
-            <span className="stat-value">{stats?.model ?? '-'}</span>
+            <span className="stat-label" style={{ whiteSpace: 'nowrap' }}>{stats?.model ?? '-'}</span>
           </div>
-          <button className="stat-line"
-            style={{ width: '100%', border: 'none', background: 'none', cursor: 'pointer', color: 'inherit' }}
+          <button
+            style={{
+              border: 'none', background: 'none', cursor: 'pointer',
+              color: 'var(--text-muted)', fontSize: 11, padding: 0,
+              textAlign: 'left', whiteSpace: 'nowrap',
+            }}
             onClick={async () => {
               try {
                 const r = await fetch('/api/v1/update/check')
@@ -134,8 +137,7 @@ export function Sidebar() {
                 }
               } catch { addToast('检查失败', 'error') }
             }}>
-            <span className="stat-label">🔄 更新</span>
-            <span className="stat-value">v2.3.2</span>
+            🔄 v2.3.3
           </button>
         </div>
       </div>
